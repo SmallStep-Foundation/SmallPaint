@@ -30,6 +30,9 @@
 #if !TARGET_OS_IPHONE
     SSMainMenu *menu = [[SSMainMenu alloc] init];
     [menu setAppName:@"SmallPaint"];
+    [menu setAboutAppName:@"SmallPaint"];
+    [menu setAboutVersion:@"1.0"];
+    [menu setAboutTarget:self];
     NSArray *items = [NSArray arrayWithObjects:
         [SSMainMenuItem itemWithTitle:@"New" action:@selector(newDocument:) keyEquivalent:@"n" modifierMask:NSCommandKeyMask target:self],
         [SSMainMenuItem itemWithTitle:@"Open…" action:@selector(openDocument:) keyEquivalent:@"o" modifierMask:NSCommandKeyMask target:self],
@@ -68,6 +71,11 @@
 - (void)clearDocument:(id)sender {
     (void)sender;
     [_mainWindow clearDocument];
+}
+
+- (void)showAbout:(id)sender {
+    (void)sender;
+    [SSAboutPanel showWithAppName:@"SmallPaint" version:@"1.0"];
 }
 
 #if defined(GNUSTEP) && !__has_feature(objc_arc)

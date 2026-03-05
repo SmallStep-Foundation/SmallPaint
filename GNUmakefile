@@ -42,4 +42,8 @@ SmallPaint_LDFLAGS = $(SMALLSTEP_LIB_PATH) $(SMALLSTEP_LDFLAGS) -Wl,--allow-shli
 SmallPaint_ADDITIONAL_LDFLAGS = $(SMALLSTEP_LIB_PATH) $(SMALLSTEP_LDFLAGS) -lSmallStep
 SmallPaint_TOOL_LIBS = -lSmallStep -lobjc
 
+before-all::
+	mkdir -p Resources && cp -f ../SmallStepLib/Resources/logo.png Resources/logo.png 2>/dev/null || true
+SmallPaint_RESOURCE_FILES = Resources/logo.png
+
 include $(GNUSTEP_MAKEFILES)/application.make
