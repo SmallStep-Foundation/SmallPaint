@@ -11,7 +11,7 @@
 static const CGFloat kToolStripHeight = 36.0;
 
 @interface ColorSwatchView : NSView
-@property (nonatomic, strong) NSColor *fillColor;
+@property (nonatomic, retain) NSColor *fillColor;
 @end
 @implementation ColorSwatchView
 - (void)drawRect:(NSRect)dirtyRect {
@@ -29,13 +29,13 @@ static const NSInteger kDefaultNewWidth  = 640;
 static const NSInteger kDefaultNewHeight = 480;
 
 @interface PaintWindow () <CanvasViewDelegate>
-@property (nonatomic, strong) NSScrollView *scrollView;
-@property (nonatomic, strong) CanvasView *canvasView;
-@property (nonatomic, strong) NSView *toolStrip;
-@property (nonatomic, strong) NSButton *pencilButton;
-@property (nonatomic, strong) NSButton *eraserButton;
-@property (nonatomic, strong) NSButton *colorButton;
-@property (nonatomic, strong) ColorSwatchView *colorSwatch;
+@property (nonatomic, retain) NSScrollView *scrollView;
+@property (nonatomic, retain) CanvasView *canvasView;
+@property (nonatomic, retain) NSView *toolStrip;
+@property (nonatomic, retain) NSButton *pencilButton;
+@property (nonatomic, retain) NSButton *eraserButton;
+@property (nonatomic, retain) NSButton *colorButton;
+@property (nonatomic, retain) ColorSwatchView *colorSwatch;
 @property (nonatomic, copy) NSString *documentPath;  // nil if unsaved
 @property (nonatomic, assign) BOOL documentDirty;
 @end
