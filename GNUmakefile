@@ -8,6 +8,12 @@
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
+# Guard: always build the app by default. An explicit .DEFAULT_GOAL makes
+# plain 'make' immune to reordering of rules below (e.g. a before-all::
+# block before the application.make include would otherwise become the
+# default goal and silently skip the app build).
+.DEFAULT_GOAL := all
+
 APP_NAME = SmallPaint
 
 SmallPaint_OBJC_FILES = \
@@ -23,27 +29,27 @@ SmallPaint_INCLUDE_DIRS = \
 	-I. \
 	-IApp \
 	-IUI \
-	-I../SmallStepLib/SmallStep/Core \
-	-I../SmallStepLib/SmallStep/Platform/Linux
+	$(SMALLSTEP_INCLUDE_DIRS)
 
-# SmallStep framework (from SmallStepLib)
-SMALLSTEP_FRAMEWORK := $(shell find ../SmallStepLib -name "SmallStep.framework" -type d 2>/dev/null | head -1)
-ifneq ($(SMALLSTEP_FRAMEWORK),)
-  SMALLSTEP_LIB_DIR := $(shell cd $(SMALLSTEP_FRAMEWORK)/Versions/0 2>/dev/null && pwd)
-  SMALLSTEP_LIB_PATH := -L$(SMALLSTEP_LIB_DIR)
-  SMALLSTEP_LDFLAGS := -Wl,-rpath,$(SMALLSTEP_LIB_DIR)
-else
-  SMALLSTEP_LIB_PATH :=
-  SMALLSTEP_LDFLAGS :=
-endif
+# SmallStep framework (shared discovery - SmallStepLib/GNUmakefile.include)
+-include ../SmallStepLib/GNUmakefile.include
 
 SmallPaint_LIBRARIES_DEPEND_UPON = -lobjc -lgnustep-gui -lgnustep-base
 SmallPaint_LDFLAGS = $(SMALLSTEP_LIB_PATH) $(SMALLSTEP_LDFLAGS) -Wl,--allow-shlib-undefined
 SmallPaint_ADDITIONAL_LDFLAGS = $(SMALLSTEP_LIB_PATH) $(SMALLSTEP_LDFLAGS) -lSmallStep
 SmallPaint_TOOL_LIBS = -lSmallStep -lobjc
 
-before-all::
-	mkdir -p Resources && cp -f ../SmallStepLib/Resources/logo.png Resources/logo.png 2>/dev/null || true
-SmallPaint_RESOURCE_FILES = Resources/logo.png
+SmallPaint_RESOURCE_FILES = \
+	Resources/SmallPaint.png \
+	Resources/logo.png
+# Application icon (bare filename; copied into the bundle Resources dir)
+SmallPaint_APPLICATION_ICON = SmallPaint.png
+
 
 include $(GNUSTEP_MAKEFILES)/application.make
+
+# Copy the shared logo into Resources before the build (defined after
+# the application.make include so it is not the makefile default goal)
+before-all::
+	mkdir -p Resources && cp -f ../SmallStepLib/Resources/logo.png Resources/logo.png 2>/dev/null || true
+

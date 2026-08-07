@@ -11,9 +11,15 @@
 static const CGFloat kToolStripHeight = 36.0;
 
 @interface ColorSwatchView : NSView
+{
+    NSColor *_fillColor;
+}
 @property (nonatomic, retain) NSColor *fillColor;
 @end
 @implementation ColorSwatchView
+#if defined(GNUSTEP) && !__has_feature(objc_arc)
+@synthesize fillColor = _fillColor;
+#endif
 - (void)drawRect:(NSRect)dirtyRect {
     (void)dirtyRect;
     NSColor *c = _fillColor ?: [NSColor blackColor];
@@ -35,12 +41,23 @@ static const NSInteger kDefaultNewHeight = 480;
 @property (nonatomic, retain) NSButton *pencilButton;
 @property (nonatomic, retain) NSButton *eraserButton;
 @property (nonatomic, retain) NSButton *colorButton;
-@property (nonatomic, retain) ColorSwatchView *colorSwatch;
+@property (nonatomic, retain) NSView *colorSwatch;
 @property (nonatomic, copy) NSString *documentPath;  // nil if unsaved
 @property (nonatomic, assign) BOOL documentDirty;
 @end
 
 @implementation PaintWindow
+#if defined(GNUSTEP) && !__has_feature(objc_arc)
+@synthesize scrollView = _scrollView;
+@synthesize canvasView = _canvasView;
+@synthesize toolStrip = _toolStrip;
+@synthesize pencilButton = _pencilButton;
+@synthesize eraserButton = _eraserButton;
+@synthesize colorButton = _colorButton;
+@synthesize colorSwatch = _colorSwatch;
+@synthesize documentPath = _documentPath;
+@synthesize documentDirty = _documentDirty;
+#endif
 
 - (instancetype)init {
     NSUInteger style = [SSWindowStyle standardWindowMask];
@@ -102,7 +119,7 @@ static const NSInteger kDefaultNewHeight = 480;
     x += 78;
 
     _colorSwatch = [[ColorSwatchView alloc] initWithFrame:NSMakeRect(x, 6, 24, 24)];
-    [_colorSwatch setFillColor:[NSColor blackColor]];
+    [(ColorSwatchView *)_colorSwatch setFillColor:[NSColor blackColor]];
     [_toolStrip addSubview:_colorSwatch];
 
     _colorButton = [[NSButton alloc] initWithFrame:NSMakeRect(x + 28, 4, 60, 28)];
@@ -160,7 +177,7 @@ static const NSInteger kDefaultNewHeight = 480;
     if ([sender isKindOfClass:[NSColorPanel class]]) {
         NSColor *c = [(NSColorPanel *)sender color];
     [_canvasView setForegroundColor:c];
-    [_colorSwatch setFillColor:c];
+    [(ColorSwatchView *)_colorSwatch setFillColor:c];
     [_colorSwatch setNeedsDisplay:YES];
     }
 }

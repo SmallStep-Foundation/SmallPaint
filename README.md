@@ -24,16 +24,15 @@ No other external libraries; uses only license-compatible GNUstep/AppKit and Sma
 
 ## Build
 
-1. Build and install SmallStepLib:
+1. Build SmallStepLib:
    ```bash
    cd ../SmallStepLib
    make
-   make install
    ```
 
 2. Build SmallPaint:
    ```bash
-   cd ../SmallPaint
+   cd ../Paint
    make
    ```
 
